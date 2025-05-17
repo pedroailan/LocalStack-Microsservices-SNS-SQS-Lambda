@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs
+      - DEBUG=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app-network
+
+  localstack.sns.api:
+    image: localstacksnsapi
+    build:
+      context: .
+      dockerfile: LocalStack.SNS.API/LocalStack.SNS.API/Dockerfile
+    container_name: localstack-sns-api
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - localstack
+    networks:
+      - app-network
+
+  localstack.sqs.api:
+    image: localstacksqsapi
+    build:
+      context: .
+      dockerfile: LocalStack.SQS.API/Dockerfile
+    container_name: localstack-sqs-api
+    ports:
+      - "5002:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - localstack
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

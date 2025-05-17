@@ -1,0 +1,6 @@
+@LocalStack.SQS.API_HostAddress = http://localhost:5008
+
+GET {{LocalStack.SQS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
