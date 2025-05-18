@@ -7,10 +7,12 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=sns,sqs
+      - SERVICES=sns,sqs,lambda,apigateway
       - DEBUG=1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./lambda.zip:/tmp/lambda.zip
+
     networks:
       - app-network
 
